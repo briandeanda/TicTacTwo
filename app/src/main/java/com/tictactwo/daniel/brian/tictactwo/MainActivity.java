@@ -8,8 +8,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 public class MainActivity extends AppCompatActivity {
+    public ListView PlayerList;
+    public FloatingActionButton startButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,14 +23,61 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
+        startButton = (FloatingActionButton) findViewById(R.id.startButton);
+        PlayerList = (ListView) findViewById(R.id.playerList);
+        startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                startButton.setVisibility(View.GONE);
+                PlayerList.setVisibility(View.VISIBLE);
             }
         });
+
+        // Defined Array values to show in ListView
+        String[] values = new String[] { "Daniel",
+                "Arturo",
+                "Brian",
+                "Edgar",
+                "Alcides",
+                "Elias"
+        };
+
+        // Define a new Adapter
+        // First parameter - Context
+        // Second parameter - Layout for the row
+        // Third parameter - ID of the TextView to which the data is written
+        // Forth - the Array of data
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+
+
+        // Assign adapter to ListView
+        PlayerList.setAdapter(adapter);
+
+        // ListView Item Click Listener
+        PlayerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                // ListView Clicked item index
+                int itemPosition = position;
+
+                // ListView Clicked item value
+                String  itemValue = (String) PlayerList.getItemAtPosition(position);
+
+                Snackbar.make(view, "Position :"+itemPosition+"  ListItem : " +itemValue, Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+
+            }
+
+        });
+
+
     }
 
     @Override
