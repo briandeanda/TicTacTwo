@@ -42,7 +42,7 @@ public class ConnectThread extends Thread{
 
     public void run() {
         mAdapter.cancelDiscovery();
-        Log.v(LOG_TAG, "cancel dics");
+        Log.d(LOG_TAG, "cancel dics");
         try {
             mSocket.connect();
         } catch (IOException e) {
@@ -56,7 +56,7 @@ public class ConnectThread extends Thread{
             }
             return;
         }
-        Log.v(LOG_TAG, "SCORE!");
+        Log.d(LOG_TAG, "SCORE!");
     }
 
     public void cancel() {

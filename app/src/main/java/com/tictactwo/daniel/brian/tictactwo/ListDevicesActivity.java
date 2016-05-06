@@ -76,7 +76,7 @@ public class ListDevicesActivity extends ListActivity{
                 Log.d(LOG_TAG, address);
                 BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
                 ConnectThread t = ConnectThread.getInstance(device, mBluetoothAdapter);
-                t.run();
+                t.start();
             }
         });
     }
