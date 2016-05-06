@@ -3,6 +3,7 @@ package com.tictactwo.daniel.brian.tictactwo;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Message;
 import android.util.Log;
 
 import java.io.IOException;
@@ -58,6 +59,9 @@ public class ConnectThread extends Thread{
         }
         Log.d(LOG_TAG, "SCORE!");
         // TODO: this is the connecting client. Start Game activity here.
+        Message msg = Message.obtain();
+        msg.what = 0;
+        ListDevicesActivity.handler.sendMessage(msg);
     }
 
     public void cancel() {
