@@ -51,6 +51,7 @@ public class AcceptThread extends Thread{
 
             if (socket != null) {
                 Log.d(LOG_TAG, "CONNECTED!");
+                //TODO - this means this guy is the host.  Launch game activity with flag
                 break;
             }
         }

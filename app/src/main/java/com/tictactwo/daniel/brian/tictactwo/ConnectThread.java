@@ -57,6 +57,7 @@ public class ConnectThread extends Thread{
             return;
         }
         Log.d(LOG_TAG, "SCORE!");
+        // TODO: this is the connecting client. Start Game activity here.
     }
 
     public void cancel() {
