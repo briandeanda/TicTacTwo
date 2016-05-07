@@ -23,7 +23,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public static Context context;
     private ManagerThread managerThread;
 
-    private static String[][] board = {{"","",""},{"","",""},{"","",""}};
+    private static String[][] board = {{"0","0","0"},{"0","0","0"},{"0","0","0"}};
 
     public ImageButton imageButton1, imageButton2, imageButton3,
             imageButton4, imageButton5, imageButton6,
@@ -76,14 +76,14 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     public static void updateGameBoard(int row, int col) {
         if (isXPlayer == 0) {
-            board[row][col] = "X";
-        } else {
             board[row][col] = "O";
+        } else {
+            board[row][col] = "X";
         }
     }
 
     public static void updateGameBoard(String flatBoard){
-        int index =0;
+        int index = 0;
         int newRow = 0, newCol = 0;
 
         outerloop:
@@ -94,23 +94,29 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
                     Log.d(LOG_TAG, "board: "+board[row][col]+" icon: "+Character.toString(icon) );
                     if(!board[row][col].equals(Character.toString(icon))){
+
                         board[row][col] = Character.toString(icon);
                         flattenedBoard.setCharAt(index, icon);
+
+
+                        Log.d(LOG_TAG, "UPDATE board: "+board[row][col]+" icon: "+Character.toString(icon) );
                         int buttonIndex = index+1;
                         String buttonID = "imageButton"+Integer.toString(buttonIndex);
+                        Log.d(LOG_TAG, "Flattened character: "+Character.toString(icon));
+                        Log.d(LOG_TAG, buttonID);
                         int resID = context.getResources().getIdentifier(buttonID, "id", "com.tictactwo.daniel.brian.tictactwo");
                         Activity activity = (Activity) context;
                         ImageButton button = (ImageButton) activity.findViewById(resID);
-                        updateSquare(button);
+                        updateSquareReceived(button);
                         button.setEnabled(false);
                         newRow = row;
                         newCol = col;
                         break outerloop;
                     }
-                    else{
-                        board[row][col] = Character.toString(icon);
-                        flattenedBoard.setCharAt(index, icon);
-                    }
+//                    else{
+//                        board[row][col] = Character.toString(icon);
+//                        flattenedBoard.setCharAt(index, icon);
+//                    }
                 }
                 index++;
             }
@@ -118,7 +124,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
         Log.d(LOG_TAG, "newRow: "+Integer.toString(newRow)+" newCol: "+Integer.toString(newCol) );
         Log.d(LOG_TAG, "GameWon: " + Boolean.toString(hasGameWon(board, newRow, newRow)));
-        boolean hasWon = hasGameWon(board, newRow, newRow);
+        printBoard();
+        boolean hasWon = hasGameWon(board, newRow, newCol);
         if (hasWon) {
             CharSequence text;
             if(isXPlayer == 0)
@@ -133,6 +140,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public static void printBoard(){
+        String flat="";
+        for(int i=0; i<3; i++){
+            for(int j=0; j<3; j++){
+                flat = flat+" "+board[i][j];
+            }
+            flat=flat+"\n";
+        }
+
+        Log.d(LOG_TAG, flat);
+    }
+
     @Override
     public void onClick(View v) {
         int row = 0, col = 0;
@@ -141,63 +160,63 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.imageButton1:
                 col = 0;
                 row = 0;
-                updateSquare(imageButton1);
+                updateSquareLocal(imageButton1);
                 imageButton1.setEnabled(false);
                 break;
 
             case R.id.imageButton2:
                 col = 1;
                 row = 0;
-                updateSquare(imageButton2);
+                updateSquareLocal(imageButton2);
                 imageButton2.setEnabled(false);
                 break;
 
             case R.id.imageButton3:
                 col = 2;
                 row = 0;
-                updateSquare(imageButton3);
+                updateSquareLocal(imageButton3);
                 imageButton3.setEnabled(false);
                 break;
 
             case R.id.imageButton4:
                 col = 0;
                 row = 1;
-                updateSquare(imageButton4);
+                updateSquareLocal(imageButton4);
                 imageButton4.setEnabled(false);
                 break;
 
             case R.id.imageButton5:
                 col = 1;
                 row = 1;
-                updateSquare(imageButton5);
+                updateSquareLocal(imageButton5);
                 imageButton5.setEnabled(false);
                 break;
 
             case R.id.imageButton6:
                 col = 2;
                 row = 1;
-                updateSquare(imageButton6);
+                updateSquareLocal(imageButton6);
                 imageButton6.setEnabled(false);
                 break;
 
             case R.id.imageButton7:
                 col = 0;
                 row = 2;
-                updateSquare(imageButton7);
+                updateSquareLocal(imageButton7);
                 imageButton7.setEnabled(false);
                 break;
 
             case R.id.imageButton8:
                 col = 1;
                 row = 2;
-                updateSquare(imageButton8);
+                updateSquareLocal(imageButton8);
                 imageButton8.setEnabled(false);
                 break;
 
             case R.id.imageButton9:
                 col = 2;
                 row = 2;
-                updateSquare(imageButton9);
+                updateSquareLocal(imageButton9);
                 imageButton9.setEnabled(false);
                 break;
 
@@ -232,8 +251,15 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    public static void updateSquare(ImageButton button) {
+    public static void updateSquareLocal(ImageButton button) {
         if(isXPlayer == 0)
+            button.setImageResource(R.drawable.o);
+        else
+            button.setImageResource(R.drawable.x);
+    }
+
+    public static void updateSquareReceived(ImageButton button) {
+        if(isXPlayer != 0)
             button.setImageResource(R.drawable.o);
         else
             button.setImageResource(R.drawable.x);

@@ -63,12 +63,12 @@ public class ExampleUnitTest{
     public void test5() throws Exception {
         GameActivity game = new GameActivity();
         String[][] arra= {
-                {"O","O","0"},
-                {"0","0","0"},
-                {"X","X","X"}
+                {"O","0","X"},
+                {"0","O","X"},
+                {"O","0","X"}
         };
 
-        assertEquals(true, game.hasGameWon(arra, 2, 0));
+        assertEquals(true, game.hasGameWon(arra, 0, 2));
     }
 
 }

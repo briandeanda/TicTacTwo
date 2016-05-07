@@ -24,11 +24,19 @@ import java.util.UUID;
 public class DevicesAdapter extends ArrayAdapter<String> {
     private static final String LOG_TAG = "Adapter";
     private BluetoothAdapter adapter = null;
+    private ArrayList<String> devices;
     private final Context context;
     public DevicesAdapter(Context c, ArrayList<String> devices, BluetoothAdapter bAdapter) {
         super(c, 0, devices);
+        this.devices = new ArrayList<>(devices);
         adapter = bAdapter;
         context = c;
+    }
+
+    public void updateList(ArrayList<String> newDevices) {
+        devices.clear();
+        devices.addAll(newDevices);
+        this.notifyDataSetChanged();
     }
 
     @Override

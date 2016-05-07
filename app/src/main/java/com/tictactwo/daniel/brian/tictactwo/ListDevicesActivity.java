@@ -110,7 +110,7 @@ public class ListDevicesActivity extends ListActivity{
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
                 Log.d(LOG_TAG, device.getAddress());
-                devicesAdapter.add(device.getName() + "\n" + device.getAddress());
+                devices.add(device.getName() + "\n" + device.getAddress());
                 devicesAdapter.notifyDataSetChanged();
                 for (String d : devices) {
                     Log.d(LOG_TAG, "Loop");
