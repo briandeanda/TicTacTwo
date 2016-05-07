@@ -1,11 +1,13 @@
 package com.tictactwo.daniel.brian.tictactwo;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -24,7 +26,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private ManagerThread managerThread;
 
     private static String[][] board;
+    public static ProgressDialog d;
 
+    
     public ImageButton imageButton1, imageButton2, imageButton3,
             imageButton4, imageButton5, imageButton6,
             imageButton7, imageButton8, imageButton9;
@@ -38,6 +42,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         board = new String[][]{{"0", "0", "0"}, {"0", "0", "0"}, {"0", "0", "0"}};
 
         context = this;
+        d = new ProgressDialog(context);
         managerThread = ManagerThread.getInstance(null);
 
         Intent intent = getIntent();
@@ -65,6 +70,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         imageButton7.setOnClickListener(this);
         imageButton8.setOnClickListener(this);
         imageButton9.setOnClickListener(this);
+
+
     }
 
 
@@ -88,6 +95,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public static void updateGameBoard(String flatBoard){
         int index = 0;
         int newRow = 0, newCol = 0;
+
+        if (d.isIndeterminate()) {
+            d.dismiss();
+        }
 
         outerloop:
         for(int row=0; row<3; row++){
@@ -249,6 +260,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
+        } else {
+
+            d.setMessage("Waiting for other player's move...");
+            d.show();
         }
 
     }
@@ -259,6 +274,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             button.setImageResource(R.drawable.o);
         else
             button.setImageResource(R.drawable.x);
+
     }
 
     public static void updateSquareReceived(ImageButton button) {
@@ -308,6 +324,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         return hasWon;
 
     }
+
 
     public static Handler handler = new Handler() {
 
