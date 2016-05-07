@@ -18,12 +18,12 @@ import android.widget.Toast;
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String LOG_TAG = "Game";
-    public static StringBuilder flattenedBoard = new StringBuilder("000000000");
+    public static StringBuilder flattenedBoard;
     private static int isXPlayer;
     public static Context context;
     private ManagerThread managerThread;
 
-    private static String[][] board = {{"0","0","0"},{"0","0","0"},{"0","0","0"}};
+    private static String[][] board;
 
     public ImageButton imageButton1, imageButton2, imageButton3,
             imageButton4, imageButton5, imageButton6,
@@ -33,6 +33,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_view);
+
+        flattenedBoard = new StringBuilder("000000000");
+        board = new String[][]{{"0", "0", "0"}, {"0", "0", "0"}, {"0", "0", "0"}};
 
         context = this;
         managerThread = ManagerThread.getInstance(null);

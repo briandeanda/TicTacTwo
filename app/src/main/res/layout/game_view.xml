@@ -9,7 +9,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="#cbc7c7">
+        android:background="#cbc7c7"
+        android:layout_centerInParent="true">
 
         <ImageButton
             android:id="@+id/imageButton1"
