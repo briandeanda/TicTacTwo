@@ -1,7 +1,10 @@
 package com.tictactwo.daniel.brian.tictactwo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -116,10 +119,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                         newCol = col;
                         break outerloop;
                     }
-//                    else{
-//                        board[row][col] = Character.toString(icon);
-//                        flattenedBoard.setCharAt(index, icon);
-//                    }
                 }
                 index++;
             }
@@ -140,6 +139,35 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
+
+//            AlertDialog alertDialog = new AlertDialog.Builder(context).create();
+//            alertDialog.setTitle("Game Over");
+//            alertDialog.setMessage(text);
+//
+//            alertDialog.setButton("Reset Game", new DialogInterface.OnClickListener() {
+//                public void onClick(DialogInterface dialog, int which) {
+//                    Activity activity = (Activity) context;
+//                    Intent intent = activity.getIntent();
+//                    activity.finish();
+//                    activity.startActivity(intent);
+//                }
+//            });
+
+
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Game Over");
+            builder.setPositiveButton("Reset Game", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    Activity activity = (Activity) context;
+                    Intent intent = activity.getIntent();
+                    activity.finish();
+                    activity.startActivity(intent);
+                    dialog.dismiss();
+                }
+            });
+            Dialog d = builder.create();
+            d.show();
         }
     }
 
@@ -249,6 +277,20 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            builder.setTitle("Game Over");
+            builder.setPositiveButton("Reset Game", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    Activity activity = (Activity) context;
+                    Intent intent = activity.getIntent();
+                    activity.finish();
+                    activity.startActivity(intent);
+                    dialog.dismiss();
+                }
+            });
+            Dialog d = builder.create();
+            d.show();
         }
 
     }
