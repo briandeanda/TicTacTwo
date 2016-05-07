@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,6 +19,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -26,6 +29,7 @@ import java.util.UUID;
 public class ListDevicesActivity extends ListActivity{
 
     private BluetoothAdapter  mBluetoothAdapter= null;
+    private static Context c;
     private static final int REQUEST_ENABLE_BT = 1;
     private static final String LOG_TAG = "LIST";
     private ArrayList<String> devices = new ArrayList<>(10);
@@ -36,6 +40,7 @@ public class ListDevicesActivity extends ListActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        c = this;
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
             Toast.makeText(ListDevicesActivity.this, "You need bluetooth to play our game ):", Toast.LENGTH_SHORT).show();
@@ -80,6 +85,21 @@ public class ListDevicesActivity extends ListActivity{
             }
         });
     }
+
+    public static Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Log.d(LOG_TAG, "Received message");
+            Log.d(LOG_TAG, Integer.toString(msg.what));
+
+            ManagerThread.getInstance((BluetoothSocket) msg.obj).start();
+
+            Intent i = new Intent(c, GameActivity.class);
+            i.putExtra("isXPlayer", msg.what);
+            c.startActivity(i);
+        }
+    };
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override

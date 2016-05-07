@@ -9,7 +9,6 @@ import android.os.Handler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.logging.LogRecord;
 
 /**
  * Created by Algernon on 5/6/16.
@@ -19,7 +18,7 @@ public class ManagerThread extends Thread {
     private final InputStream mInputStream;
     private final OutputStream mOutputStream;
     private final BluetoothSocket mSocket;
-    private final String LOG_TAG = "Manager";
+    private final static String LOG_TAG = "Manager";
 
     protected ManagerThread(BluetoothSocket socket) {
         mSocket = socket;
@@ -38,8 +37,10 @@ public class ManagerThread extends Thread {
 
     public static ManagerThread getInstance(BluetoothSocket socket) {
         if (instance == null) {
+            Log.d(LOG_TAG, "NEW INSTANCE");
             instance = new ManagerThread(socket);
         }
+        Log.d(LOG_TAG, "GETTING INSTANCE");
         return instance;
     }
 
@@ -51,6 +52,9 @@ public class ManagerThread extends Thread {
             try {
                 bytes = mInputStream.read(buffer);
                 // TODO: Send to activity handler.
+                Log.d(LOG_TAG, String.valueOf(bytes));
+                Handler h = GameActivity.handler;
+                h.sendMessage(h.obtainMessage(1, bytes, -1, buffer));
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -77,17 +81,20 @@ public class ManagerThread extends Thread {
     }
 
     public void sendMoves(String moves) {
+        Log.d(LOG_TAG, moves);
+
         if (!moves.equals(null) && !moves.equals("")) {
+            Log.d(LOG_TAG, "Putting moves");
             Message msgObg = handler.obtainMessage();
             Bundle b = new Bundle();
             b.putString("message", moves);
             msgObg.setData(b);
             handler.sendMessage(msgObg);
-
         }
     }
 
     private final Handler handler = new Handler() {
+
 
         public void handleMessage(Message msg) {
             String move = msg.getData().getString("message");

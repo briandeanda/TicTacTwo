@@ -1,7 +1,11 @@
 package com.tictactwo.daniel.brian.tictactwo;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
@@ -9,6 +13,13 @@ import android.widget.ImageButton;
  * Created by brian on 5/5/16.
  */
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private static final String LOG_TAG = "Game";
+    public StringBuilder flattenedBoard = new StringBuilder("000000000");
+    private  int isXPlayer;
+    private ManagerThread managerThread;
+
+    private String[][] board = {{"","",""},{"","",""},{"","",""}};
 
     public ImageButton imageButton1, imageButton2, imageButton3,
             imageButton4, imageButton5, imageButton6,
@@ -18,6 +29,13 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_view);
+
+        managerThread = ManagerThread.getInstance(null);
+
+        Intent intent = getIntent();
+        isXPlayer = intent.getIntExtra("isXPlayer", -1);
+
+        Log.v(LOG_TAG, String.valueOf(isXPlayer));
 
         imageButton1 = (ImageButton) findViewById(R.id.imageButton1);
         imageButton2 = (ImageButton) findViewById(R.id.imageButton2);
@@ -41,10 +59,28 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         imageButton9.setOnClickListener(this);
     }
 
+
+    public void rowAndColonFlattenBoard(int row, int col) {
+        int position = (3 * row) + col;
+        if (isXPlayer == 1) {
+            flattenedBoard.setCharAt(position, 'X');
+        } else {
+            flattenedBoard.setCharAt(position, 'O');
+        }
+    }
+
+    public void updateGameBoard(int row, int col) {
+        if (isXPlayer == 0) {
+            board[row][col] = "X";
+        } else {
+            board[row][col] = "O";
+        }
+    }
+
     @Override
     public void onClick(View v) {
-        int row, col;
-
+        int row = 0, col = 0;
+        Log.d(LOG_TAG, "onClick");
         switch (v.getId()) {
             case R.id.imageButton1:
                 col = 0;
@@ -104,6 +140,18 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
 
+        rowAndColonFlattenBoard(row, col);
+        updateGameBoard(row, col);
+        boolean hasWon = hasGameWon(board, row, col);
+        Log.d(LOG_TAG, "hasWon");
+        Log.d(LOG_TAG, String.valueOf(hasWon));
+
+        if (!hasWon) {
+            Log.d(LOG_TAG, "Sending moves!");
+            Log.d(LOG_TAG, "Flattened Board");
+            Log.d(LOG_TAG, flattenedBoard.toString());
+            managerThread.sendMoves(flattenedBoard.toString());
+        }
         /*if(client)
             board[row][col] = "x";
         else if(server)
@@ -154,5 +202,22 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         return hasWon;
 
     }
+
+    public static Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            Log.d(LOG_TAG, "Received message");
+            Log.d(LOG_TAG, Integer.toString(msg.what));
+            Log.d(LOG_TAG, msg.toString());
+            byte[] a = (byte[]) msg.obj;
+            String s = new String(a);
+            Log.d(LOG_TAG, s);
+
+            // Update game board
+
+        }
+    };
 
 }

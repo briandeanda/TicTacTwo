@@ -3,8 +3,8 @@ package com.tictactwo.daniel.brian.tictactwo;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
+import android.os.Message;
 import android.util.Log;
-import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.UUID;
@@ -40,7 +40,7 @@ public class AcceptThread extends Thread{
 
     @Override
     public void run() {
-        BluetoothSocket socket = null;
+        BluetoothSocket socket;
         while (true) {
             try {
                 socket = mBluetoothServerSocket.accept();
@@ -51,7 +51,12 @@ public class AcceptThread extends Thread{
 
             if (socket != null) {
                 Log.d(LOG_TAG, "CONNECTED!");
+
                 //TODO - this means this guy is the host.  Launch game activity with flag
+                Message msg = Message.obtain();
+                msg.what = 1;
+                msg.obj = socket;
+                ListDevicesActivity.handler.sendMessage(msg);
                 break;
             }
         }
