@@ -8,7 +8,8 @@
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="20dp"
+        android:background="#cbc7c7">
 
         <ImageButton
             android:id="@+id/imageButton1"
@@ -17,7 +18,7 @@
             android:tag=""
             android:layout_column="1"
             android:layout_row="1"
-            android:background="@drawable/x" />
+            android:background="@drawable/my_button_bg" />
 
         <ImageButton
             android:id="@+id/imageButton2"
@@ -26,7 +27,7 @@
             android:tag=""
             android:layout_column="2"
             android:layout_row="1"
-            android:background="@drawable/x" />
+            android:background="@drawable/my_button_bg" />
 
         <ImageButton
             android:id="@+id/imageButton3"
@@ -35,7 +36,7 @@
             android:tag=""
             android:layout_column="3"
             android:layout_row="1"
-            android:background="@drawable/x" />
+            android:background="@drawable/my_button_bg" />
 
         <ImageButton
             android:id="@+id/imageButton4"
@@ -44,7 +45,7 @@
             android:tag=""
             android:layout_column="1"
             android:layout_row="2"
-            android:background="@drawable/x" />
+            android:background="@drawable/my_button_bg" />
 
         <ImageButton
             android:id="@+id/imageButton5"
@@ -53,7 +54,7 @@
             android:tag=""
             android:layout_column="2"
             android:layout_row="2"
-            android:background="@drawable/x" />
+            android:background="@drawable/my_button_bg" />
 
         <ImageButton
             android:id="@+id/imageButton6"
@@ -62,7 +63,7 @@
             android:tag=""
             android:layout_column="3"
             android:layout_row="2"
-            android:background="@drawable/x" />
+            android:background="@drawable/my_button_bg" />
 
         <ImageButton
             android:id="@+id/imageButton7"
@@ -71,7 +72,7 @@
             android:tag=""
             android:layout_column="1"
             android:layout_row="3"
-            android:background="@drawable/x" />
+            android:background="@drawable/my_button_bg" />
 
         <ImageButton
             android:id="@+id/imageButton8"
@@ -80,7 +81,7 @@
             android:tag=""
             android:layout_column="2"
             android:layout_row="3"
-            android:background="@drawable/x" />
+            android:background="@drawable/my_button_bg" />
 
         <ImageButton
             android:id="@+id/imageButton9"
@@ -89,7 +90,7 @@
             android:tag=""
             android:layout_column="3"
             android:layout_row="3"
-            android:background="@drawable/x" />
+            android:background="@drawable/my_button_bg" />
 
     </GridLayout>
 

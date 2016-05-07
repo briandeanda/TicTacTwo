@@ -1,5 +1,7 @@
 package com.tictactwo.daniel.brian.tictactwo;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,18 +10,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 /**
  * Created by brian on 5/5/16.
  */
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String LOG_TAG = "Game";
-    public StringBuilder flattenedBoard = new StringBuilder("000000000");
-    private  int isXPlayer;
+    private final static String LOG_TAG = "Game";
+    public static StringBuilder flattenedBoard = new StringBuilder("000000000");
+    private static int isXPlayer;
+    public static Context context;
     private ManagerThread managerThread;
 
-    private String[][] board = {{"","",""},{"","",""},{"","",""}};
+    private static String[][] board = {{"","",""},{"","",""},{"","",""}};
 
     public ImageButton imageButton1, imageButton2, imageButton3,
             imageButton4, imageButton5, imageButton6,
@@ -30,6 +34,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game_view);
 
+        context = this;
         managerThread = ManagerThread.getInstance(null);
 
         Intent intent = getIntent();
@@ -69,11 +74,62 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    public void updateGameBoard(int row, int col) {
+    public static void updateGameBoard(int row, int col) {
         if (isXPlayer == 0) {
             board[row][col] = "X";
         } else {
             board[row][col] = "O";
+        }
+    }
+
+    public static void updateGameBoard(String flatBoard){
+        int index =0;
+        int newRow = 0, newCol = 0;
+
+        outerloop:
+        for(int row=0; row<3; row++){
+            for(int col=0; col<3; col++){
+                if(flatBoard.charAt(index) != '0') {
+                    char icon = flatBoard.charAt(index);
+
+                    Log.d(LOG_TAG, "board: "+board[row][col]+" icon: "+Character.toString(icon) );
+                    if(!board[row][col].equals(Character.toString(icon))){
+                        board[row][col] = Character.toString(icon);
+                        flattenedBoard.setCharAt(index, icon);
+                        int buttonIndex = index+1;
+                        String buttonID = "imageButton"+Integer.toString(buttonIndex);
+                        int resID = context.getResources().getIdentifier(buttonID, "id", "com.tictactwo.daniel.brian.tictactwo");
+                        Activity activity = (Activity) context;
+                        ImageButton button = (ImageButton) activity.findViewById(resID);
+                        updateSquare(button);
+                        button.setEnabled(false);
+                        newRow = row;
+                        newCol = col;
+                        break outerloop;
+                    }
+                    else{
+                        board[row][col] = Character.toString(icon);
+                        flattenedBoard.setCharAt(index, icon);
+                    }
+                }
+                index++;
+            }
+        }
+
+        Log.d(LOG_TAG, "newRow: "+Integer.toString(newRow)+" newCol: "+Integer.toString(newCol) );
+        Log.d(LOG_TAG, "GameWon: " + Boolean.toString(hasGameWon(board, newRow, newRow)));
+        boolean hasWon = hasGameWon(board, newRow, newRow);
+        if (hasWon) {
+            CharSequence text;
+            if(isXPlayer == 0)
+                text = "X has won!";
+            else
+                text = "O has won!";
+
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
         }
     }
 
@@ -85,55 +141,64 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.imageButton1:
                 col = 0;
                 row = 0;
+                updateSquare(imageButton1);
                 imageButton1.setEnabled(false);
                 break;
 
             case R.id.imageButton2:
                 col = 1;
                 row = 0;
-                imageButton1.setEnabled(false);
+                updateSquare(imageButton2);
+                imageButton2.setEnabled(false);
                 break;
 
             case R.id.imageButton3:
                 col = 2;
                 row = 0;
-                imageButton1.setEnabled(false);
+                updateSquare(imageButton3);
+                imageButton3.setEnabled(false);
                 break;
 
             case R.id.imageButton4:
                 col = 0;
                 row = 1;
-                imageButton1.setEnabled(false);
+                updateSquare(imageButton4);
+                imageButton4.setEnabled(false);
                 break;
 
             case R.id.imageButton5:
                 col = 1;
                 row = 1;
-                imageButton1.setEnabled(false);
+                updateSquare(imageButton5);
+                imageButton5.setEnabled(false);
                 break;
 
             case R.id.imageButton6:
                 col = 2;
                 row = 1;
-                imageButton1.setEnabled(false);
+                updateSquare(imageButton6);
+                imageButton6.setEnabled(false);
                 break;
 
             case R.id.imageButton7:
                 col = 0;
                 row = 2;
-                imageButton1.setEnabled(false);
+                updateSquare(imageButton7);
+                imageButton7.setEnabled(false);
                 break;
 
             case R.id.imageButton8:
                 col = 1;
                 row = 2;
-                imageButton1.setEnabled(false);
+                updateSquare(imageButton8);
+                imageButton8.setEnabled(false);
                 break;
 
             case R.id.imageButton9:
                 col = 2;
                 row = 2;
-                imageButton1.setEnabled(false);
+                updateSquare(imageButton9);
+                imageButton9.setEnabled(false);
                 break;
 
             default:
@@ -146,25 +211,37 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(LOG_TAG, "hasWon");
         Log.d(LOG_TAG, String.valueOf(hasWon));
 
-        if (!hasWon) {
-            Log.d(LOG_TAG, "Sending moves!");
-            Log.d(LOG_TAG, "Flattened Board");
-            Log.d(LOG_TAG, flattenedBoard.toString());
-            managerThread.sendMoves(flattenedBoard.toString());
+
+        Log.d(LOG_TAG, "Sending moves!");
+        Log.d(LOG_TAG, "Flattened Board");
+        Log.d(LOG_TAG, flattenedBoard.toString());
+        managerThread.sendMoves(flattenedBoard.toString());
+        if (hasWon) {
+            CharSequence text;
+            if(isXPlayer == 0)
+                text = "O has won!";
+            else
+                text = "X has won!";
+
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, text, duration);
+            toast.show();
         }
-        /*if(client)
-            board[row][col] = "x";
-        else if(server)
-            board[row][col] = "o";
 
-        hasGameWon(board, row, col);
+    }
 
-        */
+
+    public static void updateSquare(ImageButton button) {
+        if(isXPlayer == 0)
+            button.setImageResource(R.drawable.o);
+        else
+            button.setImageResource(R.drawable.x);
     }
 
     // Takes the row and column coordinates of the last move made
     // and checks to see if that move causes the player to win
-    public boolean hasGameWon(String[][] gameBoard, int row, int col){
+    public static boolean hasGameWon(String[][] gameBoard, int row, int col){
         String Player = gameBoard[row][col];
 
         int r = row;
@@ -216,7 +293,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(LOG_TAG, s);
 
             // Update game board
-
+            updateGameBoard(s.substring(0,9));
         }
     };
 
