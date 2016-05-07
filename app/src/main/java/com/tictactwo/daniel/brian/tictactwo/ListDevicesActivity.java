@@ -93,6 +93,8 @@ public class ListDevicesActivity extends ListActivity{
             Log.d(LOG_TAG, "Received message");
             Log.d(LOG_TAG, Integer.toString(msg.what));
 
+            ManagerThread.getInstance((BluetoothSocket) msg.obj).start();
+
             Intent i = new Intent(c, GameActivity.class);
             i.putExtra("isXPlayer", msg.what);
             c.startActivity(i);

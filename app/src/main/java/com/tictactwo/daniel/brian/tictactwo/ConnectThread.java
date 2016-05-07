@@ -61,6 +61,7 @@ public class ConnectThread extends Thread{
         // TODO: this is the connecting client. Start Game activity here.
         Message msg = Message.obtain();
         msg.what = 0;
+        msg.obj = mSocket;
         ListDevicesActivity.handler.sendMessage(msg);
     }
 
