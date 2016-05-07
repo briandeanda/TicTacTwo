@@ -3,6 +3,7 @@ package com.tictactwo.daniel.brian.tictactwo;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,7 +17,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 /**
- * Created by brian on 5/5/16.
+ * Created by brian on 5/5/16./;
  */
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -27,7 +28,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     private ManagerThread managerThread;
 
     private static String[][] board;
+    public static ProgressDialog d;
 
+    
     public ImageButton imageButton1, imageButton2, imageButton3,
             imageButton4, imageButton5, imageButton6,
             imageButton7, imageButton8, imageButton9;
@@ -41,6 +44,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         board = new String[][]{{"0", "0", "0"}, {"0", "0", "0"}, {"0", "0", "0"}};
 
         context = this;
+        d = new ProgressDialog(context);
         managerThread = ManagerThread.getInstance(null);
 
         Intent intent = getIntent();
@@ -68,6 +72,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         imageButton7.setOnClickListener(this);
         imageButton8.setOnClickListener(this);
         imageButton9.setOnClickListener(this);
+
+
     }
 
 
@@ -91,6 +97,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
     public static void updateGameBoard(String flatBoard){
         int index = 0;
         int newRow = 0, newCol = 0;
+
+        if (d.isIndeterminate()) {
+            d.dismiss();
+        }
 
         outerloop:
         for(int row=0; row<3; row++){
@@ -157,6 +167,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Game Over");
+            builder.setMessage(text);
             builder.setPositiveButton("Reset Game", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     Activity activity = (Activity) context;
@@ -166,8 +177,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     dialog.dismiss();
                 }
             });
-            Dialog d = builder.create();
-            d.show();
+            Dialog dia = builder.create();
+            dia.show();
         }
     }
 
@@ -277,9 +288,9 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
             Toast toast = Toast.makeText(context, text, duration);
             toast.show();
-
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             builder.setTitle("Game Over");
+            builder.setMessage(text);
             builder.setPositiveButton("Reset Game", new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int which) {
                     Activity activity = (Activity) context;
@@ -289,7 +300,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
                     dialog.dismiss();
                 }
             });
-            Dialog d = builder.create();
+            Dialog dia = builder.create();
+            dia.show();
+        } else {
+            d.setMessage("Waiting for other player's move...");
             d.show();
         }
 
@@ -301,6 +315,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             button.setImageResource(R.drawable.o);
         else
             button.setImageResource(R.drawable.x);
+
     }
 
     public static void updateSquareReceived(ImageButton button) {
@@ -350,6 +365,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         return hasWon;
 
     }
+
 
     public static Handler handler = new Handler() {
 
