@@ -1,23 +1,14 @@
 package com.tictactwo.daniel.brian.tictactwo;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothHeadset;
-import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
-
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.UUID;
 
 /**
  * Created by Algernon on 5/5/16.
